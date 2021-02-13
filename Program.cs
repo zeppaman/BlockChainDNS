@@ -8,6 +8,7 @@ using System.Linq;
 using BlockChainDNS.Services;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using System.Diagnostics;
 
 namespace BlockChainDNS
 {
@@ -16,6 +17,8 @@ namespace BlockChainDNS
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            Stopwatch timer = new Stopwatch();
 
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             
@@ -44,7 +47,10 @@ namespace BlockChainDNS
             node3.Data["message"] = "Second Item in flow";
             service.Add(node3,1);
 
+            timer.Start();
             var node4 = service.Get(node3.Key, 1);
+            timer.Stop();
+            Console.WriteLine($"timing {timer.ElapsedMilliseconds}ms");
 
 
            var emptylist= service.GetAncerstor(node2,1);

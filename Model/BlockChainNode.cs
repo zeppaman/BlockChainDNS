@@ -50,8 +50,8 @@ namespace BlockChainDNS.Model
             {
                 
                 var result = new Dictionary<string, string>();
-                var base32 = this.ToBase32();
-                var tokens = Tokenize(base32, 254);// max txt lenght -1
+                var base64 = this.ToBase64();
+                var tokens = Tokenize(base64, 254);// max txt lenght -1
                 foreach (var token in tokens)
                 {
                     result[token] = Hash(token);
@@ -76,9 +76,9 @@ namespace BlockChainDNS.Model
         
         
 
-        public string ToBase32()
+        public string ToBase64()
         {
-            return Base32.ToBase32String(UTF8Encoding.UTF8.GetBytes(Data.ToString()));
+            return Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(Data.ToString()));
         }
 
 
@@ -102,7 +102,7 @@ namespace BlockChainDNS.Model
             return tokens;
         }
 
-        public string Hash(string text)
+        public virtual string Hash(string text)
         {
             using (var md5 = MD5.Create())
             {

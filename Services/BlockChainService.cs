@@ -91,8 +91,8 @@ namespace BlockChainDNS.Services
 
             }
 
-            var base32=string.Join("", fragments);
-            var item=FromBase32(base32);
+            var base64 = string.Join("", fragments);
+            var item=FromBase64(base64);
             if(key!=item.Key)
             {
                 throw new Exception("Invalid content. Key mismatch");
@@ -100,9 +100,9 @@ namespace BlockChainDNS.Services
             return item;
         }
 
-        public  BlockChainNode FromBase32(string text32)
+        public  BlockChainNode FromBase64(string text64)
         {
-            var obj = JObject.Parse(UTF8Encoding.UTF8.GetString(Base32.FromBase32String(text32)));
+            var obj = JObject.Parse(UTF8Encoding.UTF8.GetString(Convert.FromBase64String(text64)));
             BlockChainNode bc = new BlockChainNode();
             bc.Data = (JObject)obj.DeepClone();//othewise reactive field history override history
             obj["_history"]?.ToObject<List<string>>().ForEach((x) => { bc.History.Add(x); });
