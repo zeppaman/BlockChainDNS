@@ -1,0 +1,15 @@
+﻿version: '2.4'
+
+services:
+  dns1:
+    image: tgpfeiffer/shaman-dns
+    #build:
+    #    context: .
+    #    dockerfile: Dockerfile
+    container_name: dns1
+    command: shaman --server --token xxx --api-listen 0.0.0.0:1632 --dns-listen 0.0.0.0:53 -l trace --insecure  
+    ports:
+      - 1632:1632
+      - 53:53/udp
+
+
