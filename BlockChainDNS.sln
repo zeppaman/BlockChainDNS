@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockChainDNS", "BlockChainDNS.csproj", "{27E81F12-74C5-47A9-BEE7-36EAD233007F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlockChainDNS", "BlockChainDNS.csproj", "{27E81F12-74C5-47A9-BEE7-36EAD233007F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockChainDNS.Client", "BlockChainDNS.Client\BlockChainDNS.Client.csproj", "{961C3FB5-A620-4D0A-90D2-471D428A8910}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockChainDNS.Test", "BlockChainDNS.Test\BlockChainDNS.Test.csproj", "{7AA9A7B0-C907-4ED2-BE02-AC5686C83136}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockChainDNS.Web", "BlockChainDNS.Web\BlockChainDNS.Web.csproj", "{C36F62A7-3AB7-4CBF-BCD9-4D4067DF03A4}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3211211B-1690-468D-B1B9-FFA046652E84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,22 @@ Global
 		{27E81F12-74C5-47A9-BEE7-36EAD233007F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E81F12-74C5-47A9-BEE7-36EAD233007F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E81F12-74C5-47A9-BEE7-36EAD233007F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961C3FB5-A620-4D0A-90D2-471D428A8910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961C3FB5-A620-4D0A-90D2-471D428A8910}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961C3FB5-A620-4D0A-90D2-471D428A8910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961C3FB5-A620-4D0A-90D2-471D428A8910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AA9A7B0-C907-4ED2-BE02-AC5686C83136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AA9A7B0-C907-4ED2-BE02-AC5686C83136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AA9A7B0-C907-4ED2-BE02-AC5686C83136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AA9A7B0-C907-4ED2-BE02-AC5686C83136}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C36F62A7-3AB7-4CBF-BCD9-4D4067DF03A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C36F62A7-3AB7-4CBF-BCD9-4D4067DF03A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C36F62A7-3AB7-4CBF-BCD9-4D4067DF03A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C36F62A7-3AB7-4CBF-BCD9-4D4067DF03A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3211211B-1690-468D-B1B9-FFA046652E84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3211211B-1690-468D-B1B9-FFA046652E84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3211211B-1690-468D-B1B9-FFA046652E84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3211211B-1690-468D-B1B9-FFA046652E84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
