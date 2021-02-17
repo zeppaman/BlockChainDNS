@@ -1,0 +1,97 @@
+﻿@model BlockChainDNS.Web.Models.ValidationResult
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Data validation</h1>
+
+    <h2> Data properties</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Parameter</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Computed key</td>
+                <td>@Model.Result?.Key</td>
+            </tr>
+            <tr>
+                <td>Computed URL</td>
+                <td>@Model.RequestedURL</td>
+            </tr>
+            <tr>
+                <td>Expected Key</td>
+                <td>@Model.ExpectedKey</td>
+            </tr>
+
+            <tr>
+                <td>Payload</td>
+                <td><pre style="text-align:left">@Model.Result?.Data.ToString()</pre></td>
+            </tr>
+
+            <tr>
+                <td>History</td>
+                <td>
+                    @foreach (var parent in Model.Result?.History)
+                    {
+                        @parent <br />
+                    }
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <h2>Fragments</h2>
+
+    <table class="table table-striped ">
+        <thead>
+            <tr scope="row" class="row">
+                <th class="col-3" scope="col">Key</th>
+                <th class="col-9" scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fragment in Model.Result?.TokenMap)
+            {
+                <tr scope="row" class="row">
+                    <td class="col-3">@fragment.Value</td>
+                    <td class="col-9">
+                        <div class="container">
+                            
+                                <div class="form-group">
+                                    <input type="text" value="@fragment.Key" class="form-control" />
+                                </div>
+                            
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+<h2> Errors</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Error</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var error in Model.Errors)
+        {
+            <tr>
+                <td>error</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+    </div>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace BlockChainDNS.Model
 {
@@ -39,8 +40,10 @@ namespace BlockChainDNS.Model
         {
             var key = string.Join("-", history) + "+";
             var tokenshash = string.Join("-", values);
-            return Hash(key + tokenshash);
+            var fullKey = (key + tokenshash);
+            return Hash(fullKey);
         }
+
 
         public ObservableCollection<string> History { get; set; } = new ObservableCollection<string>();//First to last
 
@@ -78,7 +81,7 @@ namespace BlockChainDNS.Model
 
         public string ToBase64()
         {
-            return Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(Data.ToString()));
+            return Convert.ToBase64String(UnicodeEncoding.Unicode.GetBytes(Data.ToString(Formatting.None)));
         }
 
 
@@ -106,7 +109,7 @@ namespace BlockChainDNS.Model
         {
             using (var md5 = MD5.Create())
             {
-                return Base32.ToBase32String(md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(text)));                
+                return Base32.ToBase32String(md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(text))).ToLower();                
             }
         }
     }

@@ -17,12 +17,12 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <form class="form-inline">
+                    <form class="form-inline"  asp-controller="Home" asp-action="Open" method="post">
                       <div class="form-group mb-2">
                         <label for="urlTxt" class="sr-only">Email</label>
-                        <input type="text" readonly class="form-control" id="urlTxt" value="" placeholder="enter your URL here">
+                        <input type="text"  class="form-control" id="urlTxt"  name="urlTxt" value="" placeholder="enter your URL here">
                       </div>                        
-                      <button type="submit" class="btn btn-primary mb-2">Validate</button>
+                      <button type="submit" class="btn btn-primary mb-2">Open</button>
                     </form>
                 </div>
             </div>

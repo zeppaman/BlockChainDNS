@@ -1,3 +1,6 @@
+using BlockChainDNS.Client;
+using BlockChainDNS.Services;
+using DnsClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace BlockChainDNS.Web
@@ -23,7 +27,10 @@ namespace BlockChainDNS.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<LookupClient>((x) =>new LookupClient( Dns.GetHostAddresses("dns").FirstOrDefault(),53));
           services.AddControllersWithViews().AddRazorRuntimeCompilation();
+          services.AddSingleton<IDNSClient, ShamanDNSCLient>();
+          services.AddSingleton<IBlockChainService, BlockChainService>();
 
         }
 

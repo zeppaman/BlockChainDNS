@@ -9,8 +9,11 @@ namespace BlockChainDNS.Web.Models
     public class ValidationResult
     { 
         public BlockChainNode Result { get; set; }
+        public string ExpectedKey { get; set; }
+
 
         public List<string> Errors { get; set; } = new List<string>();
         public List<BlockChainNode> Hierarchy { get; set; } = new List<BlockChainNode>();
+        public string RequestedURL { get; internal set; }
     }
 }

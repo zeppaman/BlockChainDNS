@@ -17,7 +17,7 @@ namespace BlockChainDNS.Client
 
         HttpClient client;
         string domain = "http://localhost:1632";
-        public ShamanDNSCLient(string domain)
+        public ShamanDNSCLient(string domain=null)
         {
             this.domain = domain??this.domain;
             var handler = new HttpClientHandler()
