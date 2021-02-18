@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlockChainDNS.Web", "BlockC
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3211211B-1690-468D-B1B9-FFA046652E84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockChainDNS.UnitTest", "BlockChainDNS.UnitTest\BlockChainDNS.UnitTest.csproj", "{5BC5CBF4-7401-4FC7-9591-949BBA9B9D67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlockChainDNS.UnitTest", "BlockChainDNS.UnitTest\BlockChainDNS.UnitTest.csproj", "{5BC5CBF4-7401-4FC7-9591-949BBA9B9D67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{0724FF8F-8A76-4D6E-863F-FB1374C5D091}"
+	ProjectSection(SolutionItems) = preProject
+		PROTOCOL.md = PROTOCOL.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

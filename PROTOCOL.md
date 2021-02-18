@@ -1,0 +1,98 @@
+# BlockChain DNS protocol
+
+## Actors
+
+The protocol identifies the following list of actors:
+
+- **Consumer**: who reads data and need to thrust the data he received
+- **Producer**: who produces data. He is a thrusted entity and is responsible for security. It is supposed non-malicus.
+- **DNS Provider**: a thrusted service that olds a DNS service and is responsible for the security of the DNS system. It is supposed non-malicus.
+
+## Requiremts
+The purpose of the protocol is to define a serverless standard for sharing thrusted data across a distribuited system. 
+
+The requirements of the system are:
+
+1. **thrust the source** the data must be get from a thrusted authority. Only the source can write data.
+2. **secure** the data must be read only from the consumer.
+3. **distributed** the system must be distrubute for beeing esaily accessed by the consumers
+4. **serverless** the system dont have to run a server
+5. **cost** the system should run theorically free or relies on existing system of a company without wasting resources
+6. **any hashing algoritm** we do not impose restriction on hashing algoritm for defining data fingerprints
+7. **any crypting algoritms** 
+8. **data linking** any record must have an unique, always accessible, URL
+9. **data segmentation** data inside an organizaton can be isolated in conainers (database, or collection)
+
+## Protocol
+
+### Phase 1: Hand Shake
+
+This phase can be done in two different mode:
+
+1. Off line handshake
+2. Using a thrusted HTTP authority
+
+The key point is that the handshake have to be safe and the protocoll assumes that the consumer get the right private key from the producer (no possibility for mad in the middle fraud).
+
+During this process client and producer share the URL of the database, the private key and the criptographic algoritm
+
+#### 1. Off line handshake
+This happens when the consumer and the producer share the key by a secure channel. It can be a cripted archived shared by mail, agreed phisically in a room.
+
+
+#### 2. Using a thrusted HTTP authority
+This happens downloading a text file using a HTTPS call. The https protocol expose the server certificate, that thrust the source. 
+For our porpuse the fact that a server have a certificate issued on a domain is sufficient for considering the source thrusted.
+
+
+### Phase 2: Data writing
+The producer can publish data to the BlockChainDNS by the following procedure:
+
+1. The data are in json format. The encodig is without any indentation unicode string.
+2. The data contains the following set of special fields:
+	- *_history*: an array of the keys of anchestor. The order is from the first to the last (excluded the current one)
+3. the data has a textual representation as resutl of the json serialization. Given the formatting standard and the character encoding, the process is bidirectional and deterministic
+4. the data is crypted by the sever with an asymmetric algoritm. This protocol doesn not introduce any restriction but the algoritm must be specified during the handshake.
+4. the data contains all the information, so an hash of the data is itself a unique key (fingerprint)
+5. altering the data will alter the key. The key should be computed with any irreversible algotim, the protocol do not introduce restriction (but NDS host name lenght may)
+6. The data is cripted using a private key and then converted to base 64
+7. bacause the space that we can contain in a TXT record is limited to 255 character the content is splitted into chunks 254 character long
+8. for each chunk an hash is computed and an index is assigned (integer progessive)
+10. the hasing of the concatenation of the history keys and the cunk's hases define the key for the element
+11. the key of the element defines the data URL `{key}.{db}.{domain}`
+12. each chunk of data is published to a DNS subdomain with URL `{index}.{key}.{db}.{domain}`
+
+### Phase 3: Data read
+The read, given an URL can:
+
+1. validate the record integrity, by computing the hasing of data and compating it with the privided key
+2. validate the history, fetching all the previous record and validating record integrity
+3. thrust the source, because only the producer can write data that are readable with the owned public key
+
+
+
+## Solution
+
+The protocol uses the DNS standard as a distribuited database. A client library implements the rules contained into the protocol.
+
+## Prof of concept
+
+This repository contains a fulli working POC.
+
+It uses Shammon database as DNS server (but result can be extended to any public DNS services with API or any on premise solution) and a C# based implmentation that runs on all the major OS (Linux, MacOS, Windows).
+
+### Example
+
+
+### Performance
+
+Thanks to the simplicity of DNS protocol and the usage of UDP we have this performances:
+
+| benchmark  | time |
+| ------------- | ------------- |
+| Read  | 6ms  |
+| Write*  | 10ms  |
+
+* the write depens on the target DNS system
+
+
