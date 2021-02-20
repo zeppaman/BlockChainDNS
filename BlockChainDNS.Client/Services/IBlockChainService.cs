@@ -9,13 +9,13 @@ namespace BlockChainDNS.Services
     public interface IBlockChainService
     {
         //id vs version?
-         BlockChainNode Get(string key, int db, string domain);
+         BlockChainNode Get(string key, int db, string domain, byte[] privateKey);
 
-         void Add(BlockChainNode nodetoadd, int db, string domain);
+         void Add(BlockChainNode nodetoadd, int db, string domain, byte[] publicKey);
 
-         void Validate(JObject data, string key,  int db, string domain, string expectedKey=null);
-        BlockChainNode New(BlockChainNode node2, JObject data=null);
+         void Validate(JObject data, string key,  int db, string domain, byte[] privateKey, string expectedKey=null);
+        BlockChainNode New(BlockChainNode node2, byte[] publicKey, JObject data = null);
 
-         List<BlockChainNode> GetAncerstor(BlockChainNode node, int db, string domain);
+         List<BlockChainNode> GetAncerstor(BlockChainNode node, int db, string domain, byte[] privateKey);
     }
 }
