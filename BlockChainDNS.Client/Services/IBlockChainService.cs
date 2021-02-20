@@ -1,4 +1,5 @@
-﻿using BlockChainDNS.Model;
+﻿using BlockChainDNS.Client.Model;
+using BlockChainDNS.Model;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,8 @@ namespace BlockChainDNS.Services
         BlockChainNode New(BlockChainNode node2, byte[] publicKey, JObject data = null);
 
          List<BlockChainNode> GetAncerstor(BlockChainNode node, int db, string domain, byte[] privateKey);
+
+        void CreateDatabase( int db, string domain, DecriptKey keyStorage );
+        DecriptKey GetDecryptKey(int db, string domain);
     }
 }

@@ -10,6 +10,7 @@ using System.Net;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using BlockChainDNS.Client.Model;
 
 namespace BlockChainDNS.Services
 {
@@ -59,7 +60,7 @@ namespace BlockChainDNS.Services
             fullObj["data"] = data64;
             var fullObj64 = Convert.ToBase64String(UnicodeEncoding.Unicode.GetBytes(fullObj.ToString(Formatting.None)));
             WriteLog($"fullObj64: {fullObj64}");
-            var tokens = Tokenize(fullObj64, 254).ToList();
+            
 
             var itemUrl = ComputeRecordUrl(db, nodetoadd.Hash, domain);
             var keyDomain = lookup.QueryAsync(itemUrl, QueryType.TXT).Result;
@@ -69,34 +70,13 @@ namespace BlockChainDNS.Services
                 client.AddRecord(new DNSEntry()
                 {
                     Domain = itemUrl,
-                    Value = tokens.Count.ToString()
+                    Value = fullObj64.Length.ToString()
                 });
-            }
+            }         
 
 
-            var keyUrl = ComputeRecordUrl(db, nodetoadd.Hash, domain);
-
-            client.AddRecord(new DNSEntry()
-            {
-                Domain = itemUrl,
-                Value = tokens.Count.ToString()
-            });
-
-
-
-            int i = 0;
-            foreach (var token in tokens)
-            {
-                this.client.AddRecord(new DNSEntry()
-                {
-                    Domain = ComputeFragmentUrl(db, nodetoadd.Hash, i, domain),
-                    Type = "TXT",
-                    Value = token,
-                    Name = "XX"
-                });             
-
-                i++;
-            }
+            WriteDNSFragmentedText(itemUrl, fullObj64, 254);
+           
         }
 
         public static void WriteLog(string v)
@@ -112,28 +92,10 @@ namespace BlockChainDNS.Services
         }
 
         public BlockChainNode Get(string key, int db, string domain, byte[] privateKey)
-        {            
+        {
 
-            List<string> fragments = new List<string>();
-
-            for (int i = 0; i < 100; i++)
-            {
-                var fragmentUrl = ComputeFragmentUrl(db, key, i, domain);
-
-                var result = lookup.QueryAsync(fragmentUrl,QueryType.TXT).Result;
-                if (result!=null && !result.HasError && result.Answers?.Count > 0)
-                {
-                    fragments.Add(result.Answers.TxtRecords().FirstOrDefault()?.EscapedText.FirstOrDefault());
-                }
-                else
-                {
-                     result = lookup.QueryAsync(fragmentUrl, QueryType.A).Result;
-                    break;
-                }              
-
-            }
-
-            var base64 = string.Join("", fragments);
+            var base64 = ReadDNSFragmentedText(ComputeRecordUrl(db, key, domain));
+           
             WriteLog($"fullObj64: {base64}");
             var fullObj = JObject.Parse(UnicodeEncoding.Unicode.GetString(Convert.FromBase64String(base64)));
             WriteLog($"decriptKey base64: {fullObj["key"].Value<string>()}");
@@ -160,6 +122,42 @@ namespace BlockChainDNS.Services
                 throw new Exception("Invalid content. Key mismatch");
             }
             return item;
+        }
+
+        private string ReadDNSFragmentedText(string domain)
+        {
+            List<string> fragments = new List<string>();
+
+            for (int i = 0; i < 1000; i++) //TODO: canghe to a infinite loop?
+            {
+                var fragmentUrl = $"{i}.{domain}";
+
+                var result = ReadDNSTxtResult(fragmentUrl);
+                if (result == null) break;// otherwise parent domain value will be added
+
+                fragments.Add(result);
+
+            }
+
+            return string.Join("", fragments);
+        }
+
+        private string ReadDNSTxtResult(string fragmentUrl)
+        {
+            if (!fragmentUrl.EndsWith("."))
+            {
+                fragmentUrl = fragmentUrl + ".";
+            }
+            var result = lookup.QueryAsync(fragmentUrl, QueryType.TXT).Result;
+            if (result != null && !result.HasError && result.Answers?.Count > 0 )
+            {
+                var resultDomain = result.Answers.FirstOrDefault().DomainName.Value;
+                if (resultDomain == fragmentUrl)
+                {
+                  return result.Answers.TxtRecords().FirstOrDefault()?.EscapedText.FirstOrDefault();
+                }
+            }
+            return null;
         }
 
         public static void WriteLogByteArray(string v, byte[] data)
@@ -255,6 +253,89 @@ namespace BlockChainDNS.Services
             }
 
             return result;
+        }
+
+
+
+        public DecriptKey GetDecryptKey(int db, string domain)
+        {
+            var privateKey = new DecriptKey();
+            var dbUrl = ComputeDBUrl(db, domain);
+            var type = ReadDNSTxtResult(dbUrl);
+            privateKey.Storage = (KeyStorage)Enum.Parse(typeof(KeyStorage), type);
+            switch (privateKey.Storage)
+            {
+                case KeyStorage.HTTP:
+                    var httpUrl = $"http.{dbUrl}";
+                    privateKey.Value= ReadDNSTxtResult(httpUrl);
+                    WebClient wc = new WebClient();
+                    privateKey.Key = wc.DownloadData(httpUrl);
+                    break;
+                case KeyStorage.DNS:
+                    var baseUrl = $"pk.{dbUrl}";
+                    privateKey.Value = ReadDNSFragmentedText(baseUrl);
+                    privateKey.Key = Convert.FromBase64String(privateKey.Value);
+                    break;
+                default:
+                    //MANUAL DO NOTHING
+                    break;
+            }
+
+            return privateKey;
+        }
+
+        public void CreateDatabase( int db, string domain, DecriptKey privateKey)
+        {
+            if (privateKey.Storage == KeyStorage.HTTP && !privateKey.Value.StartsWith("https", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new Exception("Only https address allowed");
+            }
+
+            var dbUrl = ComputeDBUrl(db, domain);
+            var dbItems = lookup.QueryAsync(dbUrl, QueryType.TXT).Result;
+            if (dbItems == null || dbItems.Answers.Count == 0)
+            {
+                WriteDNSRecord(dbUrl, "TXT", privateKey.Storage.ToString());               
+            }
+            switch (privateKey.Storage)
+            {
+                case KeyStorage.HTTP:
+                    var httpUrl = $"http.{dbUrl}";
+                    WriteDNSRecord(httpUrl, "TXT", privateKey.Value);
+                break;
+                case KeyStorage.DNS:
+                    var baseUrl = $"pk.{dbUrl}";
+                    WriteDNSFragmentedText(baseUrl, privateKey.Value,254);
+                break;
+                default:
+                    //MANUAL DO NOTHING
+                break;
+            }
+        }
+
+        private int WriteDNSFragmentedText(string baseUrl, string value, int size)
+        {
+            var tokens = Tokenize(value, size).ToList();
+            int i = 0;
+            foreach (var token in tokens)
+            {
+
+
+                WriteDNSRecord($"{i}.{baseUrl}", "TXT", token);
+
+                i++;
+            }
+            return i ;
+        }
+
+        private void WriteDNSRecord(string domain, string type, string value)
+        {
+            this.client.AddRecord(new DNSEntry()
+            {
+                Domain = domain,
+                Type = type,
+                Value = value
+            });
         }
     }
 }

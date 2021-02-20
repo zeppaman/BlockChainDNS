@@ -33,17 +33,20 @@ namespace BlockChainDNS.Web.Controllers
 
         public IActionResult Open(string urlTxt)
         {
+
             var tokens = urlTxt.Split(".");
             var domain = tokens[tokens.Length - 2] + "." + tokens[tokens.Length - 1];
             var db = int.Parse(tokens[tokens.Length - 3]);
             var key = tokens[tokens.Length - 4];
+
+            var decriptKey = _blockChain.GetDecryptKey(db, domain);
             //TODO: check token lenght, data integrity. Now an exeption will notify user about malformed url
-            var item = _blockChain.Get(key, db, domain);
+            var item = _blockChain.Get(key, db, domain, decriptKey.Key);
 
             var result = new ValidationResult();
             result.ExpectedKey = key;
             result.RequestedURL = urlTxt;
-            result.Hierarchy = _blockChain.GetAncerstor(item, db, domain);
+            result.Hierarchy = _blockChain.GetAncerstor(item, db, domain,decriptKey.Key);
             result.Result = item;
             //TODO: validate
             return View(result); ;

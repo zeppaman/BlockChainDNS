@@ -1,4 +1,5 @@
 ﻿using BlockChainDNS.Client;
+using BlockChainDNS.Client.Model;
 using BlockChainDNS.Client.Services;
 using BlockChainDNS.Model;
 using BlockChainDNS.Services;
@@ -31,6 +32,24 @@ namespace BlockChainDNS.Test
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
              cli = new ShamanDNSCLient(null);
+        }
+
+        [Fact]
+        public void WriteDecryptKey()
+        {
+            var domain = "dns-blockchain.io";
+            var privateKey = File.ReadAllBytes("./private.txt");
+            LookupClient lookupClient = new LookupClient(IPAddress.Parse("127.0.0.1"), 53);
+            ICryptoService cryptoService = new CryptoService();
+            IBlockChainService service = new BlockChainService(cli, lookupClient, cryptoService);
+            DecriptKey decriptKey = new DecriptKey();
+            decriptKey.Storage = KeyStorage.DNS;
+            decriptKey.Value = Convert.ToBase64String(privateKey);
+            service.CreateDatabase(1, domain, decriptKey);
+      
+            var key= service.GetDecryptKey(1, domain);
+            Assert.Equal(key.Value, Convert.ToBase64String(privateKey));
+            Assert.Equal(key.Key, privateKey);
         }
 
         [Fact]
