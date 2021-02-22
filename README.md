@@ -4,7 +4,7 @@ This project implements a blockchain-like distributed database using DNS as stor
 
 ## How it works
 The protcocol is syntetized by the following diagram.
-![diagram dns block chain](diagram.PNG)
+![diagram dns block chain](diagram.png?raw=true)
 
 Basically you have:
 
