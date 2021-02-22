@@ -47,6 +47,7 @@ namespace BlockChainDNS.Web.Controllers
             result.ExpectedKey = key;
             result.RequestedURL = urlTxt;
             result.Hierarchy = _blockChain.GetAncerstor(item, db, domain,decriptKey.Key);
+            result.Errors = _blockChain.Validate(item.Data, item.Hash, db, domain, decriptKey.Key);
             result.Result = item;
             //TODO: validate
             return View(result); ;

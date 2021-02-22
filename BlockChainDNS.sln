@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{0724FF8F-8A76-4D6E-863F-FB1374C5D091}"
 	ProjectSection(SolutionItems) = preProject
 		PROTOCOL.md = PROTOCOL.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

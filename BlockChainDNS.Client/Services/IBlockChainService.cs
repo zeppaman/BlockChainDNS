@@ -14,7 +14,7 @@ namespace BlockChainDNS.Services
 
          void Add(BlockChainNode nodetoadd, int db, string domain, byte[] publicKey);
 
-         void Validate(JObject data, string key,  int db, string domain, byte[] privateKey, string expectedKey=null);
+        List<string> Validate(JObject data, string key,  int db, string domain, byte[] privateKey, string expectedKey=null);
         BlockChainNode New(BlockChainNode node2, byte[] publicKey, JObject data = null);
 
          List<BlockChainNode> GetAncerstor(BlockChainNode node, int db, string domain, byte[] privateKey);

@@ -199,17 +199,50 @@ namespace BlockChainDNS.Services
 
             return tokens;
         }
-        public void Validate(JObject data, string key, int db, string domain, byte[] privateKey, string expectedKey = null)
+        public List<string> Validate(JObject data, string key, int db, string domain, byte[] privateKey, string expectedKey = null)
         {
-            //ValidateBase coerenza tra chiave e valori.
+            var errors = new List<string>();
+            //ValidateBase: Coherence betweeen data and values.
+            var computed = this.Get(key, db, domain, privateKey);
 
-            //ValidateHierarchy: tutti i nodi dichiarati devono esistere. La gerarchia dichiarata dever coincidere con quella reale.
+            if (key != computed.Hash)
+            {
+                errors.Add("Key mismatch");
+            }
 
-            //var commonAnchestor = anchestors.IndexOf(parent.Key);
-            //for (int k = commonAnchestor + 1; k < anchestors.Count; k++)
-            //{
-            //    if (anchestors[k] !=)
-            //    }
+
+            ValidateHierarchy(key,db,domain,privateKey, ref errors);
+
+            return errors;
+
+        }
+
+        private List<string> ValidateHierarchy(string  key,   int db, string domain, byte[] privateKey, ref List<string> errors)
+        {
+            var computed = this.Get(key, db, domain, privateKey);
+            if (computed == null) return new List<string>();
+
+            if (computed.History.Count > 0)
+            {
+                var hierarchy = ValidateHierarchy(computed.History.Last(), db, domain, privateKey, ref errors);
+                if (hierarchy.Count != computed.History.Count-1)
+                {
+                    errors.Add($"{computed.Hash}: history count not match with lookup");
+                }
+                else
+                {
+                    for (int i = 0; i< hierarchy.Count; i++)
+                    {
+                        if (hierarchy[i] != computed.History[i])
+                        {
+                            errors.Add($"{computed.Hash}: history do not match at {computed.History[i]}");
+                        }
+                    }
+                }
+
+            }
+
+            return computed.History.ToList();
         }
 
         private string ComputeDBUrl(int db, string domain)

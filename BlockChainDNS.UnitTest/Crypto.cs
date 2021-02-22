@@ -15,9 +15,6 @@ namespace BlockChainDNS.UnitTest
             var key=RSA.Create(4096);
             File.WriteAllBytes("./private.txt",  key.ExportRSAPrivateKey());
             File.WriteAllText("./public.txt", key.ToXmlString(false));
-
-            var service = new CryptoService();           
-
         }
 
         [Fact]

@@ -1,5 +1,7 @@
 # BlockChain DNS protocol
 
+The purpose of this protocol is to share ummutable data from a thrusted source (producer) to consumers without having servers.
+
 ## Actors
 
 The protocol identifies the following list of actors:

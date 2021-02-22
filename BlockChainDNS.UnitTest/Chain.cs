@@ -103,7 +103,7 @@ namespace BlockChainDNS.Test
             var parentList = service.GetAncerstor(node4, 1, domain, privateKey);
 
         
-           service.Validate(node4.Data, node4.Hash,1, domain, privateKey);
+           var errors=service.Validate(node4.Data, node4.Hash,1, domain, privateKey);
 
         }
 

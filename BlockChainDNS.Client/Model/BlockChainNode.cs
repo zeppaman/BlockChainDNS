@@ -91,7 +91,8 @@ namespace BlockChainDNS.Model
 
      
 
-        public virtual string GetHash(string text)
+        //TODO: Move in crytpservice
+        public static string GetHash(string text)
         {
             using (var md5 = MD5.Create())
             {
