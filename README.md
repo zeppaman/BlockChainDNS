@@ -1,12 +1,19 @@
 # Blockchain DNS
 
-... TBD
+This project implements a blockchain-like distributed database using DNS as storage.
 
 ## How it works
+The protcocol is syntetized by the following diagram.
+![diagram dns block chain](diagram.PNG)
 
-... TBD
+Basically you have:
 
-[Protocol specifications](README.md)
+- a thrusted entity that publish on a DNS. He hold the key for writing, other people could write recorda but they will be not understandable
+- a consumer: you that thrust the producer and read data
+- data: that can be any json data. You can choose to make them public or keep private
+- free: the system uses a DNS as storage, that all the company already owns. So, it comes out withotu any additional cost. The DNS itself is distributed database.
+
+You can find more info to the [Full Protocol specifications](README.md)
 
 ## RUN THE DEMO
 This project contains a demo ready to go. It is a self contained example using:
