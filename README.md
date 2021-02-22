@@ -13,7 +13,7 @@ Basically you have:
 - data: that can be any json data. You can choose to make them public or keep private
 - free: the system uses a DNS as storage, that all the company already owns. So, it comes out withotu any additional cost. The DNS itself is distributed database.
 
-You can find more info to the [Full Protocol specifications](README.md)
+You can find more info to the [Full Protocol specifications](PROTOCOL.md)
 
 ## RUN THE DEMO
 This project contains a demo ready to go. It is a self contained example using:
